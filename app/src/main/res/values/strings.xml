@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name"> Currency Converter</string>
+
+    <string name="currency">Currency</string>
+    <string name="dot">.</string>
+    <string name="afn">AFN</string>
+    <string name="refresh">refresh</string>
+    <string name="convert">Convert</string>
+    <string name="contact">Contact</string>
+    <string name="converter">Converter</string>
+    <string name="from">Currency I have</string>
+    <string name="to">Currency I want</string>
+    <string name="amount">Amount</string>
+    <string name="result">Result</string>
+    <string name="converted_amount">Converted Amount</string>
+    <string name="internet_not_available">You are not connected to the internet</string>
+    <string name="blank_input">Input a value in the first text field, result will be shown in the second text field</string>
+
+</resources>
