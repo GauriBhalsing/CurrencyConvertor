@@ -1,8 +1,7 @@
-package com.code.currency_converter.viewmodel
+package com.example.currencyconvertor
 
-import com.code.currency_converter.MainCoroutineRule
-import com.code.currency_converter.MockProvider.getJsonObject
-import com.example.currencyconvertor.BaseTest
+
+import com.example.currencyconvertor.MockProvider.getJsonObject
 import com.example.currencyconvertor.api.CurrencyApi
 import com.example.currencyconvertor.repository.MainRepository
 import com.example.currencyconvertor.viewmodel.CurrencyViewModel

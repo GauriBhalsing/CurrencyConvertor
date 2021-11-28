@@ -2,7 +2,6 @@ package com.example.currencyconvertor
 
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.code.currency_converter.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 
