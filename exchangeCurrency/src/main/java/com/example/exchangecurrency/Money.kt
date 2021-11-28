@@ -5,7 +5,9 @@ import java.math.MathContext
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
-
+/**
+ * This class will hold and convert the currency data with appropriate format
+ */
 
 data class Money(val amount: BigDecimal = BigDecimal.ZERO, val currency: Currency) : Comparable<Money> {
 

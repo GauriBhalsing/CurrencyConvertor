@@ -1,7 +1,6 @@
 package com.example.currencyconvertor.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconvertor.api.CurrencyEvent
@@ -12,12 +11,10 @@ import com.example.currencyconvertor.helper.Constants.FX
 import com.example.currencyconvertor.helper.Constants.PORTFOLIOS
 import com.example.currencyconvertor.helper.Constants.PRODUCTS
 import com.example.currencyconvertor.helper.Constants.WBC
-import com.example.currencyconvertor.models.CurrencyInfo
+import com.example.currencyconvertor.model.CurrencyInfo
 import com.example.currencyconvertor.repository.MainRepository
 import com.example.exchangecurrency.Currency
 import com.example.exchangecurrency.Money
-
-
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,18 +23,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import java.math.BigDecimal
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 
+/**
+ * This view model will take data from repository and will send it to UI.
+ * It is responsible to make any formatting,parsing of data.
+ */
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(
     private val repository: MainRepository
 ) : ViewModel() {
     private val _conversion = MutableStateFlow<CurrencyEvent>(CurrencyEvent.Empty)
     val conversion: StateFlow<CurrencyEvent> = _conversion
-    val convertedRate = MutableLiveData<Double>()
+
     /** Actual API call*/
     fun getCurrencyApi() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,10 +51,14 @@ class CurrencyViewModel @Inject constructor(
         }
     }
 
-    /** Converting JsonObject to CurrencyInfo object*/
+    /** Converting JsonObject to CurrencyInfo object
+     * This will take API response as body and returns
+     * @param ResponseBody
+     * @return arraylist of CurrencyInfo
+     * */
     private fun createCurrencyList(rateResponse: Resource.Success<ResponseBody>): ArrayList<CurrencyInfo> {
-        var jsonObject = getJsonObject(rateResponse)
-        var currencyList = ArrayList<CurrencyInfo>()
+        val jsonObject = getJsonObject(rateResponse)
+        val currencyList = ArrayList<CurrencyInfo>()
         jsonObject.let { jsonObject ->
             val keys: Iterator<String> = jsonObject.keys()
             while (keys.hasNext()) {
@@ -65,7 +68,7 @@ class CurrencyViewModel @Inject constructor(
                 while (ratesInnerKeys.hasNext()) {
                     val innerKey = ratesInnerKeys.next()
                     try {
-                        var innermostJObject = ratesJObject.getJSONObject(innerKey)
+                        val innermostJObject = ratesJObject.getJSONObject(innerKey)
                         currencyList.add(
                             convertJsonToModel(
                                 innermostJObject.getJSONObject(key).toString()
@@ -94,9 +97,20 @@ class CurrencyViewModel @Inject constructor(
             .getJSONObject(PRODUCTS)
     }
 
-    fun convertCurrency(fromCountry : String,toCountry : String, fromCountryCode :
-    String,toCountryCode : String ,amount : Double,rate : Double) :  String
-    {
+    /**
+     * This method will do currency conversion.
+     * @param fromCountry Country name from currency will be converted
+     * @param toCountry country name of target currency
+     * @param fromCountryCode country code from currency will be converted
+     * @param toCountryCode country code of expected currency
+     * @param amount amount which need to be converted
+     * @param rate selling rate
+     * @return converted currency amount
+     */
+    fun convertCurrency(
+        fromCountry: String, toCountry: String, fromCountryCode:
+        String, toCountryCode: String, amount: Double, rate: Double
+    ): String {
         val fromCurrency = Currency(fromCountry, fromCountryCode, rate)
         val toCurrency = Currency(toCountry, toCountryCode)
 

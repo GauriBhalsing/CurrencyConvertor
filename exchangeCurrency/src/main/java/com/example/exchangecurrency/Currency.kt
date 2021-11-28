@@ -3,9 +3,10 @@ package com.example.exchangecurrency
 import java.math.BigDecimal
 import java.math.MathContext
 
-/*
-* This class is responsible for holding currency data and doing conversion
-* */
+
+/**
+ * This class is responsible for holding currency data and doing conversion
+ */
 data class Currency(
     var currencyCode: CurrencyCode,
     var name: String,

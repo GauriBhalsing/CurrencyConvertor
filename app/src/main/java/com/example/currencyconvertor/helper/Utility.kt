@@ -8,15 +8,15 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.example.currencyconvertor.models.CurrencyInfo
+import com.example.currencyconvertor.model.CurrencyInfo
 import java.util.*
 
 object Utility {
 
 
-    /*
-    * This method will check device internet connection.
-    * returns true if network is ON else false
+    /**
+     * This method will check device internet connection.
+     * returns true if network is ON else false
      */
     fun isNetworkAvailable(context: Context): Boolean {
         var result = false
@@ -59,12 +59,12 @@ object Utility {
         }
     }
 
-    /*
-    * This method fetch all country name from API response.
-    * returns list of countries
+    /**
+     * This method fetch all country name from API response.
+     * returns list of countries
      */
     fun getAllCountries(currencyInfo: List<CurrencyInfo>): ArrayList<String> {
-       val countries = ArrayList<String>()
+        val countries = ArrayList<String>()
         currencyInfo.forEachIndexed { index, currencyInfo ->
             val country = currencyInfo.country
             if (!countries.contains(country)) {
@@ -76,7 +76,9 @@ object Utility {
     }
 }
 
-//hide keyboard
+/**
+ * This method will be used to hide keyboard
+ */
 fun hideKeyboard(activity: Activity) {
     val imm: InputMethodManager =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -86,5 +88,5 @@ fun hideKeyboard(activity: Activity) {
     if (view == null) {
         view = View(activity)
     }
-    imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
 }

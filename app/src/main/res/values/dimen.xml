@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin1x">8dp</dimen>
-    <dimen name="margin2x">16dp</dimen>
-    <dimen name="margin3x">24dp</dimen>
-    <dimen name="margin4x">32dp</dimen>
-
-    <dimen name="elevation1x">2dp</dimen>
-    <dimen name="elevation2x">4dp</dimen>
-    <dimen name="elevation4x">8dp</dimen>
-
-    <dimen name="textKeypad">26sp</dimen>
-
+    <dimen name="app_name_text_size">30sp</dimen>
+    <dimen name="_652dp">652dp</dimen>
+    <dimen name="_10dp">10dp</dimen>
+    <dimen name="_30dp">30dp</dimen>
+    <dimen name="_40dp">40dp</dimen>
+    <dimen name="_20dp">20dp</dimen>
+    <dimen name="_50dp">50dp</dimen>
+    <dimen name="_60dp">60dp</dimen>
+    <dimen name="_580dp">580dp</dimen>
 </resources>

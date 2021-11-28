@@ -1,8 +1,8 @@
 package com.example.exchangecurrency
 
-/*
-*This class holds a currency code and is able to fetch the symbol.
-* */
+/**
+ * This class holds a currency code and is able to fetch the symbol.
+ */
 data class CurrencyCode(val code: String) {
 
     fun getSymbol(): String {
