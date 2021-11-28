@@ -1,6 +1,6 @@
 package com.example.currencyconvertor
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,15 +12,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.currencyconvertor.api.CurrencyEvent
 import com.example.currencyconvertor.databinding.ActivityMainBinding
-import com.example.currencyconvertor.helper.Utility
+import com.example.currencyconvertor.helper.Utility.getAllCountries
+import com.example.currencyconvertor.helper.Utility.isNetworkAvailable
+import com.example.currencyconvertor.helper.Utility.makeStatusBarTransparent
 import com.example.currencyconvertor.helper.hideKeyboard
 import com.example.currencyconvertor.models.CurrencyInfo
 import com.example.currencyconvertor.viewmodel.CurrencyViewModel
+import com.example.exchangecurrency.Currency
+import com.example.exchangecurrency.Money
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import java.util.*
+import java.time.temporal.ChronoUnit
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,7 +35,10 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private var countries = ArrayList<String>()
-
+    private var selectedItem1: String? = "AFN"
+    private var selectedItem2: String? = "AFN"
+    private lateinit var currencyInfo: List<CurrencyInfo>
+    private var countrySpinnerPosition = 0
     //ViewModel
     private val mainViewModel: CurrencyViewModel by viewModels()
 
@@ -42,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //Make status bar transparent
-        Utility.makeStatusBarTransparent(this)
+        makeStatusBarTransparent(this)
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -52,7 +60,8 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.conversion.collect { event ->
                 when (event) {
                     is CurrencyEvent.Success -> {
-                        initSpinner(event.currencyInfo)
+                        currencyInfo =  event.currencyInfo
+                        initSpinner(currencyInfo)
                     }
                     is CurrencyEvent.Failure -> {
                         //currencyFragmentBinding.progressBar.isVisible = false
@@ -75,7 +84,7 @@ class MainActivity : AppCompatActivity() {
      */
 
     private fun initSpinner(currencyInfo: List<CurrencyInfo>) {
-        countries = Utility.getAllCountries(currencyInfo)
+        countries = getAllCountries(currencyInfo)
         //get first spinner country reference in view
         val spinnerFromCurrency = binding.spnFromCurrency
 
@@ -87,7 +96,9 @@ class MainActivity : AppCompatActivity() {
 
         //Handle selected item, by getting the item and storing the value in a  variable - selectedItem1
         spinnerFromCurrency.setOnItemSelectedListener { view, position, id, item ->
-
+            selectedItem1 = item.toString()
+            countrySpinnerPosition=position
+          binding.txtFirstCurrencyName.text = currencyInfo[position].currencyCode
         }
         //get second spinner country reference in view
         val spinnerToCurrency = binding.spnToCurrency
@@ -100,12 +111,13 @@ class MainActivity : AppCompatActivity() {
         //"Australia" is not available in API response so setting it separately.
         // In other cases,"countries" list can be used here as well
         spinnerToCurrency.setItems("Australia")
-
-
         //Handle selected item, by getting the item and storing the value in a  variable - selectedItem2,
         spinnerToCurrency.setOnItemSelectedListener { view, position, id, item ->
+            selectedItem2 = item.toString()
+            binding.txtSecondCurrencyName.text = "AUD"
         }
     }
+
 
     /**
      * A method for handling click events in the UI
@@ -127,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             //check if internet is available
-            else if (!Utility.isNetworkAvailable(this)){
+            else if (!isNetworkAvailable(this)){
                 Snackbar.make(binding.mainLayout,getString(R.string.internet_not_available), Snackbar.LENGTH_LONG)
                     .withColor(ContextCompat.getColor(this, R.color.dark_red))
                     .setTextColor(ContextCompat.getColor(this, R.color.white))
@@ -139,10 +151,6 @@ class MainActivity : AppCompatActivity() {
                 doConversion()
             }
         }
-
-
-
-
     }
 
     /**
@@ -151,93 +159,21 @@ class MainActivity : AppCompatActivity() {
      */
 
     private fun doConversion(){
-/*
+
         //hide keyboard
-        Utility.hideKeyboard(this)
-
-        //make progress bar visible
-        binding.prgLoading.visibility = View.VISIBLE
-
-        //make button invisible
-        binding.btnConvert.visibility = View.GONE
+        hideKeyboard(this)
 
         //Get the data inputed
 
         val from = selectedItem1.toString()
         val to = selectedItem2.toString()
         val amount = binding.etFirstCurrency.text.toString().toDouble()
+        val firstcountry = currencyInfo.get(countrySpinnerPosition).currencyName
+        val rate = currencyInfo.get(countrySpinnerPosition).sellTT.toDouble()
 
-        //do the conversion
-        Log.e("currencyList", "Activity called")
-
-
-        //observe for changes in UI
-        observeUi()*/
-
+        binding.etSecondCurrency.setText(mainViewModel.convertCurrency(from,to,firstcountry,"AUD",amount,rate))
     }
 
-    /**
-     * Using coroutines flow, changes are observed and responses gotten from the API
-     *
-     */
-
-    @SuppressLint("SetTextI18n")
-    private fun observeUi() {
-
-/*
-        mainViewModel.data.observe(this, androidx.lifecycle.Observer {result ->
-
-            when(result.status){
-                *//*Resource.Status.SUCCESS -> {
-
-                        val map: Map<String, Rates>
-
-                        map = result.data.
-
-                        map.keys.forEach {
-
-                            val rateForAmount = map[it]?.rate_for_amount
-
-                            mainViewModel.convertedRate.value = rateForAmount
-
-                            //format the result obtained e.g 1000 = 1,000
-                            val formattedString = String.format("%,.2f", mainViewModel.convertedRate.value)
-
-                            //set the value in the second edit text field
-                            binding.etSecondCurrency.setText(formattedString)
-
-                        }
-
-
-                        //stop progress bar
-                        binding.prgLoading.visibility = View.GONE
-                        //show button
-                        binding.btnConvert.visibility = View.VISIBLE
-
-
-                }*//*
-                Resource.Status.ERROR -> {
-
-                    val layout = binding.mainLayout
-                    Snackbar.make(layout,  "Oopps! Something went wrong, Try again", Snackbar.LENGTH_LONG)
-                        .withColor(ContextCompat.getColor(this, R.color.dark_red))
-                        .setTextColor(ContextCompat.getColor(this, R.color.white))
-                        .show()
-                    //stop progress bar
-                    binding.prgLoading.visibility = View.GONE
-                    //show button
-                    binding.btnConvert.visibility = View.VISIBLE
-                }
-
-                Resource.Status.LOADING -> {
-                    //stop progress bar
-                    binding.prgLoading.visibility = View.VISIBLE
-                    //show button
-                    binding.btnConvert.visibility = View.GONE
-                }
-            }
-        })*/
-    }
 
     /**
      * Method for changing the background color of snackBars
@@ -248,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         return this
     }
     private fun getCurrencyData() {
-        if (Utility.isNetworkAvailable(this) == true)
+        if (isNetworkAvailable(this) == true)
             mainViewModel.getCurrencyApi()
         else
             Snackbar.make(binding.mainLayout,getString(R.string.internet_not_available), Snackbar.LENGTH_LONG)

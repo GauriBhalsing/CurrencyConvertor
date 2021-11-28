@@ -1,5 +1,7 @@
 package com.example.currencyconvertor.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconvertor.api.CurrencyEvent
@@ -12,6 +14,9 @@ import com.example.currencyconvertor.helper.Constants.PRODUCTS
 import com.example.currencyconvertor.helper.Constants.WBC
 import com.example.currencyconvertor.models.CurrencyInfo
 import com.example.currencyconvertor.repository.MainRepository
+import com.example.exchangecurrency.Currency
+import com.example.exchangecurrency.Money
+
 
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -31,7 +37,7 @@ class CurrencyViewModel @Inject constructor(
 ) : ViewModel() {
     private val _conversion = MutableStateFlow<CurrencyEvent>(CurrencyEvent.Empty)
     val conversion: StateFlow<CurrencyEvent> = _conversion
-
+    val convertedRate = MutableLiveData<Double>()
     /** Actual API call*/
     fun getCurrencyApi() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -88,7 +94,17 @@ class CurrencyViewModel @Inject constructor(
             .getJSONObject(PRODUCTS)
     }
 
-    /*fun getConversionAmount(amount: String, sellingPrice: String):String {
-        return CurrencyConversion.convertCurrency(sellingPrice, amount)
-    }*/
+    fun convertCurrency(fromCountry : String,toCountry : String, fromCountryCode :
+    String,toCountryCode : String ,amount : Double,rate : Double) :  String
+    {
+        val fromCurrency = Currency(fromCountry, fromCountryCode, rate)
+        val toCurrency = Currency(toCountry, toCountryCode)
+
+        // create a money object and use it for calculations.
+        val currentMoney = Money(amount, fromCurrency)
+        val convertedMoney = currentMoney.convertInto(toCurrency)
+
+        return convertedMoney.toString()
+    }
+
 }

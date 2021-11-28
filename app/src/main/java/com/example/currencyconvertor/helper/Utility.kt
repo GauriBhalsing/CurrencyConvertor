@@ -18,7 +18,7 @@ object Utility {
     * This method will check device internet connection.
     * returns true if network is ON else false
      */
-    private fun isNetworkAvailable(context: Context): Boolean {
+    fun isNetworkAvailable(context: Context): Boolean {
         var result = false
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -71,7 +71,7 @@ object Utility {
                 countries.add(country)
             }
         }
-        countries.sort()
+
         return countries
     }
 }

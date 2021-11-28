@@ -1,3 +1,3 @@
-include ':currencyConvertor'
+include ':exchangeCurrency'
 include ':app'
 rootProject.name = "CurrencyConvertor"
