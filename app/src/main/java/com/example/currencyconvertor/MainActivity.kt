@@ -200,14 +200,6 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.getCurrencyApi()
         else
             displaySnackBar(getString(R.string.internet_not_available))
-            /*Snackbar.make(
-                binding.mainLayout,
-                getString(R.string.internet_not_available),
-                Snackbar.LENGTH_LONG
-            )
-                .withColor(ContextCompat.getColor(this, R.color.dark_red))
-                .setTextColor(ContextCompat.getColor(this, R.color.white))
-                .show()*/
     }
 
     private fun displaySnackBar(charSequence: CharSequence)
