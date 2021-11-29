@@ -1,9 +1,7 @@
 package com.example.currencyconvertor
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
-
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -52,6 +50,13 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        observeUI()
+        getCurrencyData()
+        //Listen to click events
+        setUpClickListener()
+    }
+
+    private fun observeUI() {
         /** Handled API response*/
         lifecycleScope.launchWhenStarted {
             mainViewModel.conversion.collect { event ->
@@ -69,13 +74,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-        getCurrencyData()
-        //Listen to click events
-        setUpClickListener()
     }
-
 
     /**
      * This method does everything required for handling spinner (Dropdown list) -
@@ -202,8 +201,7 @@ class MainActivity : AppCompatActivity() {
             displaySnackBar(getString(R.string.internet_not_available))
     }
 
-    private fun displaySnackBar(charSequence: CharSequence)
-    {
+    private fun displaySnackBar(charSequence: CharSequence) {
         Snackbar.make(
             binding.mainLayout,
             charSequence,

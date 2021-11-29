@@ -9,13 +9,15 @@ import java.text.DecimalFormat
  * This class will hold and convert the currency data with appropriate format
  */
 
-data class Money(val amount: BigDecimal = BigDecimal.ZERO, val currency: Currency) : Comparable<Money> {
+data class Money(val amount: BigDecimal = BigDecimal.ZERO, val currency: Currency) :
+    Comparable<Money> {
 
     constructor(amount: Double, currency: Currency) : this(BigDecimal(amount), currency)
 
     override operator fun compareTo(other: Money): Int {
         val thisBaseCurrencyAmount = amount.divide(currency.rate, MathContext.DECIMAL32)
-        val otherBaseCurrencyAmount = other.amount.divide(other.currency.rate, MathContext.DECIMAL32)
+        val otherBaseCurrencyAmount =
+            other.amount.divide(other.currency.rate, MathContext.DECIMAL32)
         return thisBaseCurrencyAmount.compareTo(otherBaseCurrencyAmount)
     }
 
@@ -25,7 +27,7 @@ data class Money(val amount: BigDecimal = BigDecimal.ZERO, val currency: Currenc
             formatter.format(amount)
         } else {
             val decimalFormat = DecimalFormat("#.##")
-             decimalFormat.format(amount)
+            decimalFormat.format(amount)
         }
     }
 

@@ -76,7 +76,7 @@ class CurrencyViewModel @Inject constructor(
                             )
                         )
                     } catch (e: Exception) {
-                       Log.d("CurrencyViewModel",e.toString())
+                        Log.d("CurrencyViewModel", e.toString())
                     }
                 }
             }

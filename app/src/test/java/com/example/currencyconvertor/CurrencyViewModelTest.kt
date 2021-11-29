@@ -30,10 +30,11 @@ class CurrencyViewModelTest : BaseTest() {
 
     @get:Rule
     val testCoroutineRule = MainCoroutineRule()
+
     @Before
     fun start() {
         //Used for initiation of Mockk
-        currencyApi= mockk()
+        currencyApi = mockk()
         mMainRepository = mockk()
         mCurrencyViewModel = CurrencyViewModel(mMainRepository)
     }
@@ -41,16 +42,17 @@ class CurrencyViewModelTest : BaseTest() {
     @Test
     fun testConvertJsonToModel() {
         var mJsonObject: JSONObject = getJsonObject()
-        val currencyInfo=mCurrencyViewModel.convertJsonToModel(mJsonObject.toString())
-        assert(currencyInfo !=null)
+        val currencyInfo = mCurrencyViewModel.convertJsonToModel(mJsonObject.toString())
+        assert(currencyInfo != null)
     }
 
     @Test
-    fun testGetConversionAmount()
-    {
-        val price=mCurrencyViewModel.convertCurrency("USA","Australia",
-            "USA","AUS", 1000.0,0.5)
-        assert(price=="1")
+    fun testGetConversionAmount() {
+        val price = mCurrencyViewModel.convertCurrency(
+            "USA", "Australia",
+            "USA", "AUS", 1000.0, 0.5
+        )
+        assert(price == "1")
     }
 
     @After

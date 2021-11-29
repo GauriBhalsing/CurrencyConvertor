@@ -4,8 +4,7 @@ import org.json.JSONObject
 
 object MockProvider {
 
-    fun getJsonObject(): JSONObject
-    {
+    fun getJsonObject(): JSONObject {
         val mJSONObject = JSONObject()
         mJSONObject.put("country", "USA")
         mJSONObject.put("sellTT", "0.6944")

@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
-import org.junit.runner.Description
 import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 import kotlin.coroutines.ContinuationInterceptor
 
 /**
@@ -13,7 +13,7 @@ import kotlin.coroutines.ContinuationInterceptor
  * [TestCoroutineScope] provides controls over the execution of coroutine.
  * */
 @ExperimentalCoroutinesApi
-class MainCoroutineRule: TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
+class MainCoroutineRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
 
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
@@ -23,6 +23,7 @@ class MainCoroutineRule: TestWatcher(), TestCoroutineScope by TestCoroutineScope
         super.starting(description)
         Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
     }
+
     fun runBlockingTest(block: suspend TestCoroutineScope.() -> Unit) =
         testCoroutineScope.runBlockingTest { block() }
 

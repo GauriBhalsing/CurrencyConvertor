@@ -10,10 +10,15 @@ import java.math.MathContext
 data class Currency(
     var currencyCode: CurrencyCode,
     var name: String,
-    var rate: BigDecimal = BigDecimal.ONE) {
+    var rate: BigDecimal = BigDecimal.ONE
+) {
 
     constructor(code: String, name: String) : this(CurrencyCode(code), name)
-    constructor(code: String, name: String, rate: Double) : this(CurrencyCode(code), name, BigDecimal(rate))
+    constructor(code: String, name: String, rate: Double) : this(
+        CurrencyCode(code),
+        name,
+        BigDecimal(rate)
+    )
 
     operator fun compareTo(another: Currency): Int {
         return this.name.compareTo(another.name)
@@ -28,6 +33,7 @@ data class Currency(
             .divide(rate, MathContext.DECIMAL128)
             .multiply(targetCurrency.rate)
     }
+
     companion object {
         val NONE = Currency(code = "NONE", name = "NONE")
     }
