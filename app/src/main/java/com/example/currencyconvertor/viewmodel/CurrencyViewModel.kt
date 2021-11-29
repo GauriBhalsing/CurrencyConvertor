@@ -1,6 +1,7 @@
 package com.example.currencyconvertor.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconvertor.api.CurrencyEvent
@@ -75,7 +76,7 @@ class CurrencyViewModel @Inject constructor(
                             )
                         )
                     } catch (e: Exception) {
-                        // ignore for String type
+                        Log.d("CurrencyViewModel", e.toString())
                     }
                 }
             }
